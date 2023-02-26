@@ -21,19 +21,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-//@WebServlet(name = "skiiers", value = "skiiers")
+
 @WebServlet(name = "audios", value = "audios")
 public class ResourceServlet extends HttpServlet {
-    
 	
-	/*
-	 * ConcurrentHashMap is thread safe; 
-	 */
+	//ConcurrentHashMap is thread safe; 
 	ConcurrentHashMap<Integer, Audio> audioDB = new ConcurrentHashMap<>();
 	
-	/*
-	 * simply emulation of in memory database;  
-	 */
+	//simply emulation of in memory database;  
 	@Override
 	public void init() throws ServletException {
 		Audio audio1 = new Audio(1, "artist_name_1", "track_title_1", "album_title_1", 3, 1998, 4, 2);
@@ -47,25 +42,33 @@ public class ResourceServlet extends HttpServlet {
 		
 		 
 	 }
+	
+	private int totalSoldCopies = 0;
+	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String pathInfo = request.getPathInfo();
-//		System.out.println(pathInfo);
 	    String paramName = request.getParameter("paramName");
 		if(paramName == null) {
-//			Audio audio = null;
 			Gson gson = new Gson();
 		    JsonElement element = gson.toJsonTree(audioDB);
+		    List<Audio> allAudios = new ArrayList<>();
+		    
+		    for (Audio a : audioDB.values()) {
+		    	allAudios.add(a);
+		    }
+		    
+		    for (Audio a : allAudios) {
+		    	totalSoldCopies += a.getSold_copies();
+		    }
 
 		    PrintWriter out = response.getWriter();
 		    response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
-//		    out.println("GET RESPONSE IN JSON - single element: " + gson.toJson(audio));
 		    out.println("GET RESPONSE IN JSON - all elements " + element.toString());
+		    out.println("Total sold copies: " + totalSoldCopies);
 		    out.flush();
 		}else {
 		
-//	    String paramName = request.getParameter("paramName");
 	    String value = request.getParameter(paramName);
 
 	    Audio audio = null;
@@ -75,8 +78,6 @@ public class ResourceServlet extends HttpServlet {
 	        for (Audio a : audioDB.values()) {
 	            if (value.equals(a.getArtistName())) {
 	            	matchingAudios.add(a);
-//	                audio = a;
-//	                break;
 	            }
 	        }
 	    }else if("id".equals(paramName) && value != null) {
@@ -84,24 +85,18 @@ public class ResourceServlet extends HttpServlet {
 	    	for (Audio a : audioDB.values()) {
 	    		if (id == (a.getId())) {
 	    			matchingAudios.add(a);
-//	                audio = a;
-//	                break;
 	            }
 	        }
 	    }else if("trackTitle".equals(paramName) && value != null) {
 	    	for (Audio a : audioDB.values()) {
 	    		if (value.equals(a.getTrackTitle())) {
 	    			matchingAudios.add(a);
-//	                audio = a;
-//	                break;
 	            }
 	        }
 	    }else if("albumTitle".equals(paramName) && value != null) {
 	    	for (Audio a : audioDB.values()) {
 	    		if (value.equals(a.getAlbumTitle())) {
 	    			matchingAudios.add(a);
-//	                audio = a;
-//	                break;
 	            }
 	        }
 	    }else if("year".equals(paramName) && value != null) {
@@ -113,13 +108,17 @@ public class ResourceServlet extends HttpServlet {
 	            }
 	        }
 	    }
+	    for (Audio a : matchingAudios) {
+	    	totalSoldCopies += a.getSold_copies();
+	    }
 
 	    Gson gson = new Gson();
-	    String jsonResponse = matchingAudios.isEmpty() ? "{\"error\": \"No matching Audio found\"}" : gson.toJson(matchingAudios); // audio != null ? gson.toJson(audio) : "{\"error\": \"Audio not found\"}";
+	    String jsonResponse = matchingAudios.isEmpty() ? "{\"error\": \"No matching Audio found\"}" : gson.toJson(matchingAudios); 
 
 	    PrintWriter out = response.getWriter();
 	    response.setContentType("application/json");
 	    response.setCharacterEncoding("UTF-8");
+	    out.println("Total copies sold: " + totalSoldCopies);
 	    out.print(jsonResponse);
 	    out.flush();
 	}
