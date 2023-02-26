@@ -1,19 +1,19 @@
 package org.example.model;
 
 public class Audio {
-	private int id;
+	private String id;
 	private String artistName;
 	private String trackTitle;
 	private String albumTitle;
-	private int trackNumber;
+	private String trackNumber;
 	private int year;
-	private int number_of_reviews;
+	private String number_of_reviews;
 	private int sold_copies;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getArtistName() {
@@ -34,10 +34,10 @@ public class Audio {
 	public void setAlbumTitle(String albumTitle) {
 		this.albumTitle = albumTitle;
 	}
-	public int getTrackNumber() {
+	public String getTrackNumber() {
 		return trackNumber;
 	}
-	public void setTrackNumber(int trackNumber) {
+	public void setTrackNumber(String trackNumber) {
 		this.trackNumber = trackNumber;
 	}
 	public int getYear() {
@@ -46,10 +46,10 @@ public class Audio {
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public int getNumber_of_reviews() {
+	public String getNumber_of_reviews() {
 		return number_of_reviews;
 	}
-	public void setNumber_of_reviews(int number_of_reviews) {
+	public void setNumber_of_reviews(String number_of_reviews) {
 		this.number_of_reviews = number_of_reviews;
 	}
 	public int getSold_copies() {
@@ -64,8 +64,8 @@ public class Audio {
 				+ albumTitle + ", trackNumber=" + trackNumber + ", year=" + year + ", number_of_reviews="
 				+ number_of_reviews + ", sold_copies=" + sold_copies + "]";
 	}
-	public Audio(int id, String artistName, String trackTitle, String albumTitle, int trackNumber, int year,
-			int number_of_reviews, int sold_copies) {
+	public Audio(String id, String artistName, String trackTitle, String albumTitle, String trackNumber, int year,
+			String number_of_reviews, int sold_copies) {
 		super();
 		this.id = id;
 		this.artistName = artistName;
